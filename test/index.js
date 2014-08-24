@@ -4,6 +4,12 @@ var assert = require('assert');
 var connect = require('connect');
 var request = require('supertest');
 
+var POLICY = '<?xml version="1.0"?>' +
+  '<!DOCTYPE cross-domain-policy SYSTEM "http://www.adobe.com/xml/dtds/cross-domain-policy.dtd">' +
+  '<cross-domain-policy>' +
+  '<site-control permitted-cross-domain-policies="none"/>' +
+  '</cross-domain-policy>';
+
 describe('crossdomain', function () {
 
   function helloWorld(req, res) {
@@ -19,11 +25,7 @@ describe('crossdomain', function () {
 
   function expectPolicy(uri, done) {
     request(app).get(uri)
-    .expect('Content-Type', /text\/x-cross-domain-policy/)
-    .expect(/^<\?xml version="1.0"\?>/)
-    .expect(/<!DOCTYPE cross-domain-policy SYSTEM "http:\/\/www.adobe.com\/xml\/dtds\/cross-domain-policy\.dtd">/)
-    .expect(/<cross-domain-policy>.+<\/cross-domain-policy>$/)
-    .expect(/<site-control permitted-cross-domain-policies="none"\/>/)
+    .expect(POLICY)
     .expect(200, done);
   }
 
