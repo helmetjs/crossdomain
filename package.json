@@ -16,12 +16,10 @@
   },
   "bugs": "https://github.com/helmetjs/crossdomain/issues",
   "scripts": {
-    "test": "mocha",
-    "hint": "jshint ."
+    "test": "mocha"
   },
   "devDependencies": {
     "connect": "^2.25.7",
-    "jshint": "^2.5.5",
     "mocha": "^1.21.4",
     "supertest": "^0.13.0"
   }
