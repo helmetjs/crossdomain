@@ -3,6 +3,18 @@
   "author": "Evan Hahn <me@evanhahn.com> (http://evanhahn.com)",
   "description": "Serve a restrictive crossdomain.xml at your site's root.",
   "version": "0.1.0",
+  "keywords": [
+    "helmet",
+    "security",
+    "express",
+    "connect",
+    "crossdomain.xml"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/helmetjs/crossdomain.git"
+  },
+  "bugs": "https://github.com/helmetjs/crossdomain/issues",
   "scripts": {
     "test": "mocha",
     "hint": "jshint ."
