@@ -1,0 +1,16 @@
+{
+  "name": "helmet-crossdomain",
+  "author": "Evan Hahn <me@evanhahn.com> (http://evanhahn.com)",
+  "description": "Serve a restrictive crossdomain.xml at your site's root.",
+  "version": "0.1.0",
+  "scripts": {
+    "test": "mocha",
+    "hint": "jshint ."
+  },
+  "devDependencies": {
+    "connect": "^2.25.7",
+    "jshint": "^2.5.5",
+    "mocha": "^1.21.4",
+    "supertest": "^0.13.0"
+  }
+}
