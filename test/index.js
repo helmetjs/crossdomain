@@ -26,6 +26,7 @@ describe('crossdomain', function () {
   function expectPolicy(uri, done) {
     request(app).get(uri)
     .expect(POLICY)
+    .expect('Content-Type', 'text/x-cross-domain-policy')
     .expect(200, done);
   }
 
