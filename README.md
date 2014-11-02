@@ -1,6 +1,8 @@
 Helmet's crossdomain.xml middleware
 ===================================
 
+[![Build Status](https://travis-ci.org/helmetjs/crossdomain.svg?branch=master)](https://travis-ci.org/helmetjs/crossdomain)
+
 Adobe defines [the spec for crossdomain.xml](http://www.adobe.com/devnet/articles/crossdomain_policy_file_spec.html), a policy file that grants some Adobe products (like Flash) read access to resources on your domain. An unrestrictive policy could let others load things off your domain that you don't want.
 
 To serve up a restrictive policy:
