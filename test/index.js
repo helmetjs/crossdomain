@@ -81,6 +81,28 @@ describe('crossdomain', function () {
 
   });
 
+  it('sends an ETag header which is respected', function (done) {
+    request(app).get('/crossdomain.xml')
+    .expect(200, function (err, res) {
+      if (err) { return done(err); }
+      assert(res.headers.etag, 'ETag header is missing.');
+      request(app).get('/crossdomain.xml')
+      .set('If-None-Match', res.headers.etag)
+      .expect(304, done);
+    });
+  });
+
+  it('can disable ETags', function (done) {
+    app = connect();
+    app.use(crossdomain({ etag: false }));
+    request(app).get('/crossdomain.xml')
+    .expect(200, function (err, res) {
+      if (err) { return done(err); }
+      assert(!res.headers.etag, 'ETag header is present but should not be.');
+      done();
+    });
+  });
+
   it('names its function and middleware', function () {
     assert.equal(crossdomain.name, 'crossdomain');
     assert.equal(crossdomain().name, 'crossdomain');
