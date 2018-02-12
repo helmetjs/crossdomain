@@ -3,6 +3,7 @@
   "author": "Evan Hahn <me@evanhahn.com> (https://evanhahn.com)",
   "description": "Serve a restrictive crossdomain.xml at your site's root.",
   "version": "0.1.0",
+  "license": "MIT",
   "keywords": [
     "helmet",
     "security",
