@@ -1,30 +1,22 @@
-var parse = require('url').parse
+var url = require('url')
 
-var data = '<?xml version="1.0"?>' +
-  '<!DOCTYPE cross-domain-policy SYSTEM "http://www.adobe.com/xml/dtds/cross-domain-policy.dtd">' +
-  '<cross-domain-policy>' +
-  '<site-control permitted-cross-domain-policies="none"/>' +
+var POLICY = [
+  '<?xml version="1.0"?>',
+  '<!DOCTYPE cross-domain-policy SYSTEM "http://www.adobe.com/xml/dtds/cross-domain-policy.dtd">',
+  '<cross-domain-policy>',
+  '<site-control permitted-cross-domain-policies="none"/>',
   '</cross-domain-policy>'
+].join('')
 
-module.exports = function crossdomain (options) {
-  options = options || {}
-  var caseSensitive = options.caseSensitive
-
+module.exports = function crossdomain () {
   return function crossdomain (req, res, next) {
-    var pathname = parse(req.url).pathname
+    var pathname = url.parse(req.url).pathname
 
-    var uri
-    if (caseSensitive) {
-      uri = pathname
-    } else {
-      uri = pathname.toLowerCase()
-    }
-
-    if (uri === '/crossdomain.xml') {
+    if (pathname === '/crossdomain.xml') {
       res.writeHead(200, {
         'Content-Type': 'text/x-cross-domain-policy'
       })
-      res.end(data)
+      res.end(POLICY)
     } else {
       next()
     }

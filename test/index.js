@@ -4,78 +4,44 @@ var assert = require('assert')
 var connect = require('connect')
 var request = require('supertest')
 
-var POLICY = '<?xml version="1.0"?>' +
-  '<!DOCTYPE cross-domain-policy SYSTEM "http://www.adobe.com/xml/dtds/cross-domain-policy.dtd">' +
-  '<cross-domain-policy>' +
-  '<site-control permitted-cross-domain-policies="none"/>' +
+var EXPECTED_POLICY = [
+  '<?xml version="1.0"?>',
+  '<!DOCTYPE cross-domain-policy SYSTEM "http://www.adobe.com/xml/dtds/cross-domain-policy.dtd">',
+  '<cross-domain-policy>',
+  '<site-control permitted-cross-domain-policies="none"/>',
   '</cross-domain-policy>'
+].join('')
 
 describe('crossdomain', function () {
-  function helloWorld (req, res) {
-    res.end('Hello world!')
+  function app () {
+    var result = connect()
+    result.use(crossdomain())
+    result.use(function (req, res) { res.end('Hello world') })
+    return result
   }
 
-  var app
-  beforeEach(function () {
-    app = connect()
-    app.use(crossdomain())
-    app.use(helloWorld)
+  it("doesn't respond to requests to /", function () {
+    return request(app()).get('/').expect('Hello world')
   })
 
-  function expectPolicy (uri, done) {
-    request(app).get(uri)
-    .expect(POLICY)
-    .expect('Content-Type', 'text/x-cross-domain-policy')
-    .expect(200, done)
-  }
-
-  function expectHello (uri, done) {
-    request(app).get('/')
-    .expect('Hello world!', done)
-  }
-
-  function test (uri) {
-    it('responds with proper XML visiting ' + uri, function (done) {
-      expectPolicy(uri, done)
-    })
-  }
-
-  it('preserves normal responses', function (done) {
-    expectHello('/', done)
+  it("doesn't respond to requests to different casing", function () {
+    return Promise.all([
+      request(app()).get('/CROSSDOMAIN.XML').expect('Hello world'),
+      request(app()).get('/crossdomain.XML').expect('Hello world'),
+      request(app()).get('/CROSSDOMAIN.xml').expect('Hello world')
+    ])
   })
 
-  test('/crossdomain.xml')
-  test('/crossdomain.XML')
-  test('/CrossDomain.xml')
-  test('/CROSSDOMAIN.xml')
-  test('/CROSSDOMAIN.XML')
-  test('/crossdomain.xml?')
-  test('/crossdomain.xml?foo=123&bar=456')
+  it('responds with proper XML when visiting /crossdomain.xml', function () {
+    return request(app()).get('/crossdomain.xml')
+      .expect('Content-Type', 'text/x-cross-domain-policy')
+      .expect(EXPECTED_POLICY)
+  })
 
-  it('can be forced to be case-sensitive in the middleware', function (done) {
-    var testsRemaining = 7
-    function finished (err) {
-      if (err) {
-        done(err)
-        return
-      }
-      testsRemaining -= 1
-      if (testsRemaining === 0) {
-        done()
-      }
-    }
-
-    app = connect()
-    app.use(crossdomain({ caseSensitive: true }))
-    app.use(helloWorld)
-
-    expectPolicy('/crossdomain.xml', finished)
-    expectPolicy('/crossdomain.xml?CAPITALIZED=ARGUMENTS', finished)
-    expectHello('/crossdomain.XML', finished)
-    expectHello('/CrossDomain.xml', finished)
-    expectHello('/CROSSDOMAIN.xml', finished)
-    expectHello('/CROSSDOMAIN.XML', finished)
-    expectHello('/CROSSDOMAIN.XML?foo=bar', finished)
+  it('responds with proper XML when visiting /crossdomain.xml with query string', function () {
+    return request(app()).get('/crossdomain.xml?hi=5')
+      .expect('Content-Type', 'text/x-cross-domain-policy')
+      .expect(EXPECTED_POLICY)
   })
 
   it('names its function and middleware', function () {
