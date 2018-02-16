@@ -2,7 +2,7 @@
   "name": "helmet-crossdomain",
   "author": "Evan Hahn <me@evanhahn.com> (https://evanhahn.com)",
   "description": "Serve a restrictive crossdomain.xml at your site's root.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "license": "MIT",
   "keywords": [
     "security",
