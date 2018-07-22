@@ -1,17 +1,26 @@
-Helmet's crossdomain.xml middleware
-===================================
-
+X-Permitted-Cross-Domain-Policies middleware
+============================================
 [![Build Status](https://travis-ci.org/helmetjs/crossdomain.svg?branch=master)](https://travis-ci.org/helmetjs/crossdomain)
 
-Adobe defines [the spec for crossdomain.xml](https://www.adobe.com/devnet/adobe-media-server/articles/cross-domain-xml-for-streaming.html), a policy file that grants some Adobe products (like Flash) read access to resources on your domain. An unrestrictive policy could let others load things off your domain that you don't want.
+[_Looking for a changelog?_](https://github.com/helmetjs/helmet/blob/master/HISTORY.md)
 
-To serve up a restrictive policy:
+The `X-Permitted-Cross-Domain-Policies` header tells some web clients (like Adobe Flash or Adobe Acrobat) your domain's policy for loading cross-domain content. See the description on [OWASP](https://www.owasp.org/index.php/OWASP_Secure_Headers_Project#X-Permitted-Cross-Domain-Policies) for more.
+
+Usage:
 
 ```javascript
-var crossdomain = require('helmet-crossdomain')
+const crossdomain = require('helmet-crossdomain')
+
+// Sets X-Permitted-Cross-Domain-Policies: none
 app.use(crossdomain())
+
+// You can use any of the following values:
+app.use(crossdomain({ permittedPolicies: 'none' }))
+app.use(crossdomain({ permittedPolicies: 'master-only' }))
+app.use(crossdomain({ permittedPolicies: 'by-content-type' }))
+app.use(crossdomain({ permittedPolicies: 'all' }))
 ```
 
-This serves the policy at `/crossdomain.xml`.
+The `by-ftp-type` is not currently supported. Please open an issue or pull request if you desire this feature!
 
-This doesn't make you wildly more secure, but it does help to keep Flash from loading things that you don't want it to. You might also *want* some of this behavior, in which case you should make your own less-restrictive policy and serve it.
+If you don't expect Adobe products to load data from your site, you get a minor security benefit by adding this header.
