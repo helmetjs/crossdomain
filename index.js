@@ -1,24 +1,27 @@
-var url = require('url')
+var DEFAULT_PERMITTED_POLICIES = 'none'
+var ALLOWED_POLICIES = [
+  'none',
+  'master-only',
+  'by-content-type',
+  'all'
+]
 
-var POLICY = [
-  '<?xml version="1.0"?>',
-  '<!DOCTYPE cross-domain-policy SYSTEM "http://www.adobe.com/xml/dtds/cross-domain-policy.dtd">',
-  '<cross-domain-policy>',
-  '<site-control permitted-cross-domain-policies="none"/>',
-  '</cross-domain-policy>'
-].join('')
+module.exports = function crossdomain (options) {
+  options = options || {}
 
-module.exports = function crossdomain () {
+  var permittedPolicies
+  if ('permittedPolicies' in options) {
+    permittedPolicies = options.permittedPolicies
+  } else {
+    permittedPolicies = DEFAULT_PERMITTED_POLICIES
+  }
+
+  if (ALLOWED_POLICIES.indexOf(permittedPolicies) === -1) {
+    throw new Error('"' + permittedPolicies + '" is not a valid permitted policy. Allowed values: ' + ALLOWED_POLICIES.join(', ') + '.')
+  }
+
   return function crossdomain (req, res, next) {
-    var pathname = url.parse(req.url).pathname
-
-    if (pathname === '/crossdomain.xml') {
-      res.writeHead(200, {
-        'Content-Type': 'text/x-cross-domain-policy'
-      })
-      res.end(POLICY)
-    } else {
-      next()
-    }
+    res.setHeader('X-Permitted-Cross-Domain-Policies', permittedPolicies)
+    next()
   }
 }

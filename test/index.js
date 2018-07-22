@@ -4,44 +4,72 @@ var assert = require('assert')
 var connect = require('connect')
 var request = require('supertest')
 
-var EXPECTED_POLICY = [
-  '<?xml version="1.0"?>',
-  '<!DOCTYPE cross-domain-policy SYSTEM "http://www.adobe.com/xml/dtds/cross-domain-policy.dtd">',
-  '<cross-domain-policy>',
-  '<site-control permitted-cross-domain-policies="none"/>',
-  '</cross-domain-policy>'
-].join('')
-
 describe('crossdomain', function () {
-  function app () {
+  function app (middleware) {
     var result = connect()
-    result.use(crossdomain())
+    result.use(middleware)
     result.use(function (req, res) { res.end('Hello world') })
     return result
   }
 
-  it("doesn't respond to requests to /", function () {
-    return request(app()).get('/').expect('Hello world')
+  it('sets X-Permitted-Cross-Domain-Policies: none when called with no arguments', function () {
+    return request(app(crossdomain()))
+      .get('/')
+      .expect('X-Permitted-Cross-Domain-Policies', 'none')
+      .expect('Hello world')
   })
 
-  it("doesn't respond to requests to different casing", function () {
-    return Promise.all([
-      request(app()).get('/CROSSDOMAIN.XML').expect('Hello world'),
-      request(app()).get('/crossdomain.XML').expect('Hello world'),
-      request(app()).get('/CROSSDOMAIN.xml').expect('Hello world')
-    ])
+  it('sets X-Permitted-Cross-Domain-Policies: none when called with an empty object', function () {
+    return request(app(crossdomain({})))
+      .get('/')
+      .expect('X-Permitted-Cross-Domain-Policies', 'none')
+      .expect('Hello world')
   })
 
-  it('responds with proper XML when visiting /crossdomain.xml', function () {
-    return request(app()).get('/crossdomain.xml')
-      .expect('Content-Type', 'text/x-cross-domain-policy')
-      .expect(EXPECTED_POLICY)
+  it('can explicitly set the policy to "none"', function () {
+    return request(app(crossdomain({ permittedPolicies: 'none' })))
+      .get('/')
+      .expect('X-Permitted-Cross-Domain-Policies', 'none')
+      .expect('Hello world')
   })
 
-  it('responds with proper XML when visiting /crossdomain.xml with query string', function () {
-    return request(app()).get('/crossdomain.xml?hi=5')
-      .expect('Content-Type', 'text/x-cross-domain-policy')
-      .expect(EXPECTED_POLICY)
+  it('can set the policy to "master-only"', function () {
+    return request(app(crossdomain({ permittedPolicies: 'master-only' })))
+      .get('/')
+      .expect('X-Permitted-Cross-Domain-Policies', 'master-only')
+      .expect('Hello world')
+  })
+
+  it('can set the policy to "by-content-type"', function () {
+    return request(app(crossdomain({ permittedPolicies: 'by-content-type' })))
+      .get('/')
+      .expect('X-Permitted-Cross-Domain-Policies', 'by-content-type')
+      .expect('Hello world')
+  })
+
+  it('can set the policy to "all"', function () {
+    return request(app(crossdomain({ permittedPolicies: 'all' })))
+      .get('/')
+      .expect('X-Permitted-Cross-Domain-Policies', 'all')
+      .expect('Hello world')
+  })
+
+  it('cannot set the policy to "by-ftp-filename"', function () {
+    assert.throws(function () {
+      crossdomain({ permittedPolicies: 'by-ftp-filename' })
+    })
+  })
+
+  it('cannot set the policy to invalid values', function () {
+    assert.throws(function () {
+      crossdomain({ permittedPolicies: '' })
+    })
+    assert.throws(function () {
+      crossdomain({ permittedPolicies: null })
+    })
+    assert.throws(function () {
+      crossdomain({ permittedPolicies: 'NONE' })
+    })
   })
 
   it('names its function and middleware', function () {
