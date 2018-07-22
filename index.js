@@ -1,5 +1,5 @@
-var DEFAULT_PERMITTED_POLICIES = 'none'
-var ALLOWED_POLICIES = [
+const DEFAULT_PERMITTED_POLICIES = 'none'
+const ALLOWED_POLICIES = [
   'none',
   'master-only',
   'by-content-type',
@@ -9,7 +9,7 @@ var ALLOWED_POLICIES = [
 module.exports = function crossdomain (options) {
   options = options || {}
 
-  var permittedPolicies
+  let permittedPolicies
   if ('permittedPolicies' in options) {
     permittedPolicies = options.permittedPolicies
   } else {
