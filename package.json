@@ -18,7 +18,7 @@
   },
   "bugs": "https://github.com/helmetjs/crossdomain/issues",
   "engines": {
-    "node": ">= 4"
+    "node": ">= 6"
   },
   "scripts": {
     "pretest": "standard --fix",
