@@ -65,7 +65,7 @@ describe('crossdomain', function () {
   })
 
   it('names its function and middleware', function () {
-    assert.equal(crossdomain.name, 'crossdomain')
-    assert.equal(crossdomain().name, 'crossdomain')
+    assert.strictEqual(crossdomain.name, 'crossdomain')
+    assert.strictEqual(crossdomain().name, 'crossdomain')
   })
 })
