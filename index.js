@@ -1,12 +1,12 @@
-var DEFAULT_PERMITTED_POLICIES = 'none'
-var ALLOWED_POLICIES = [
-  'none',
-  'master-only',
-  'by-content-type',
-  'all'
-]
+function getHeaderValueFromOptions (options) {
+  var DEFAULT_PERMITTED_POLICIES = 'none'
+  var ALLOWED_POLICIES = [
+    'none',
+    'master-only',
+    'by-content-type',
+    'all'
+  ]
 
-module.exports = function crossdomain (options) {
   options = options || {}
 
   var permittedPolicies
@@ -20,8 +20,14 @@ module.exports = function crossdomain (options) {
     throw new Error('"' + permittedPolicies + '" is not a valid permitted policy. Allowed values: ' + ALLOWED_POLICIES.join(', ') + '.')
   }
 
+  return permittedPolicies
+}
+
+module.exports = function crossdomain (options) {
+  var headerValue = getHeaderValueFromOptions(options)
+
   return function crossdomain (req, res, next) {
-    res.setHeader('X-Permitted-Cross-Domain-Policies', permittedPolicies)
+    res.setHeader('X-Permitted-Cross-Domain-Policies', headerValue)
     next()
   }
 }
