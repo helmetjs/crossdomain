@@ -21,7 +21,7 @@
     "email": "me@evanhahn.com"
   },
   "engines": {
-    "node": ">= 6"
+    "node": ">=4.0.0"
   },
   "scripts": {
     "pretest": "standard --fix",
