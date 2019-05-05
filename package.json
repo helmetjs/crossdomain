@@ -12,6 +12,7 @@
     "x-permitted-cross-domain-policies",
     "flash"
   ],
+  "homepage": "https://helmetjs.github.io/docs/crossdomain/",
   "repository": {
     "type": "git",
     "url": "git://github.com/helmetjs/crossdomain.git"
