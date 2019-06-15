@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.4.0 - 2019-06-15
 ### Added
 - Added TypeScript type definitions. See [#7](https://github.com/helmetjs/crossdomain/issues/7)
 - Created a changelog
