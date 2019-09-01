@@ -1,10 +1,10 @@
 import { IncomingMessage, ServerResponse } from 'http';
 
-interface CrossDomainOptions {
+interface CrossdomainOptions {
   permittedPolicies?: string;
 }
 
-function getHeaderValueFromOptions (options: CrossDomainOptions): string {
+function getHeaderValueFromOptions (options: CrossdomainOptions): string {
   const DEFAULT_PERMITTED_POLICIES = 'none';
   const ALLOWED_POLICIES = [
     'none',
@@ -27,7 +27,7 @@ function getHeaderValueFromOptions (options: CrossDomainOptions): string {
   return permittedPolicies;
 }
 
-export = function crossdomain (options: CrossDomainOptions = {}) {
+export = function crossdomain (options: CrossdomainOptions = {}) {
   const headerValue = getHeaderValueFromOptions(options);
 
   return function crossdomain (_req: IncomingMessage, res: ServerResponse, next: () => void) {
