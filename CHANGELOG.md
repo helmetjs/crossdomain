@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.5.0 - 2019-09-01
 ## Changed
 - Dropped support for Node <8
 
