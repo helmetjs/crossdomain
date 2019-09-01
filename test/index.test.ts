@@ -63,8 +63,10 @@ describe('crossdomain', () => {
   it('cannot set the policy to invalid values', () => {
     expect(() => { crossdomain({ permittedPolicies: '' }); }).toThrow();
     expect(() => { crossdomain({ permittedPolicies: 'NONE' }); }).toThrow();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     expect(() => { crossdomain({ permittedPolicies: null } as any); }).toThrow();
+    expect(() => { crossdomain({ permittedPolicies: new String('none') } as any); }).toThrow(); // eslint-disable-line no-new-wrappers
+    /* eslint-enable @typescript-eslint/no-explicit-any */
   });
 
   it('names its function and middleware', () => {
