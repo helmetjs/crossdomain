@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+## Changed
+- Dropped support for Node <8
+
 ## 0.4.0 - 2019-06-15
 ### Added
 - Added TypeScript type definitions. See [#7](https://github.com/helmetjs/crossdomain/issues/7)
