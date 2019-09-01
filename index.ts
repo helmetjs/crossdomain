@@ -4,7 +4,7 @@ interface CrossDomainOptions {
   permittedPolicies?: string;
 }
 
-function getHeaderValueFromOptions (options: CrossDomainOptions) {
+function getHeaderValueFromOptions (options: CrossDomainOptions): string {
   const DEFAULT_PERMITTED_POLICIES = 'none';
   const ALLOWED_POLICIES = [
     'none',
